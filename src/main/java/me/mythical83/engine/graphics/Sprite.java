@@ -1,17 +1,27 @@
 package me.mythical83.engine.graphics;
 
-import java.awt.image.BufferedImage;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+
+import me.mythical83.engine.Window;
 
 public class Sprite {
 
-	private BufferedImage image;
+	private Image image;
+	private Window window;
+
+	public int x;
+	public int y;
+	public int layer;
 
 	public Sprite(String filepath) {
+		window = Window.getWindow();
+
+		layer = 0;
+
 		File input = new File(filepath);
 
 		try {
@@ -22,7 +32,11 @@ public class Sprite {
 		
 	}
 
-	public void draw(JPanel window) {
-
+	public void draw() {
+		window.game.addSprite(this);
+	}
+	
+	public Image getImage() {
+		return this.image;
 	}
 }
