@@ -14,15 +14,15 @@ public class Game extends JPanel {
 	private Engine engine;
 	private ArrayList <Sprite> sprites;
 
-	public void start() {
-		setSize(new Dimension(1080, 1920));
+	public Game() {
+		sprites = new ArrayList<>();
 	}
 
 	public void setup() {
 		window = Window.getWindow();
 		Thread gameLogic = new Thread(new GameLogic());
 		gameLogic.start();
-		sprites = new ArrayList<>();
+		setSize(new Dimension(1080, 1920));
 	}
 
 	@Override
@@ -40,11 +40,10 @@ public class Game extends JPanel {
 		g.setColor(Color.BLACK);
 		g.fillOval(width, height, 30, 30);
 
-		engine.draw();
 		
 		for (Sprite sprite : sprites) {
 			g.drawImage(sprite.getImage(), sprite.x, sprite.y, this);
-			//sprites.remove(sprite);
+			sprites.remove(sprite);
 		}
 
 	}
@@ -75,6 +74,7 @@ public class Game extends JPanel {
 				lastTime = now;
 				while (delta >= 1) {
 					engine.update();
+					engine.draw();
 					window.game.repaint();
 					delta--;
 				}

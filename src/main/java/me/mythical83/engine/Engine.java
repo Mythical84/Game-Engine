@@ -9,6 +9,8 @@ public abstract class Engine {
 		this.window = Window.getWindow();
 		this.game = window.game;
 		game.setEngine(this);
+		window.setVisible(true);
+		window.game.setup();
 	}
 
 	public abstract void update();
