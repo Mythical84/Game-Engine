@@ -1,8 +1,9 @@
 package me.mythical83.engine;
 
 import java.awt.Graphics;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -10,8 +11,8 @@ import javax.swing.JPanel;
 import me.mythical83.engine.graphics.Sprite;
 
 public class Game extends JPanel {
-	private Window window;
 	private Engine engine;
+	private Player player;
 	private ArrayList <Sprite> sprites;
 
 	public Game() {
@@ -19,10 +20,10 @@ public class Game extends JPanel {
 	}
 
 	public void setup() {
-		window = Window.getWindow();
 		Thread gameLogic = new Thread(new GameLogic());
 		gameLogic.start();
 		setSize(new Dimension(1080, 1920));
+		player = Player.getPlayer();
 	}
 
 	@Override
@@ -33,18 +34,12 @@ public class Game extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
-		int width = window.getWidth()/2;
-		int height = window.getHeight()/2;
-
-		g.setColor(Color.BLACK);
-		g.fillOval(width, height, 30, 30);
-
 		
 		for (Sprite sprite : sprites) {
 			g.drawImage(sprite.getImage(), sprite.x, sprite.y, this);
-			sprites.remove(sprite);
 		}
+
+		sprites = new ArrayList<>();
 
 	}
 
@@ -65,6 +60,8 @@ public class Game extends JPanel {
 		@Override
 		public void run() {
 			Window window = Window.getWindow();
+			KeyHandler key = new KeyHandler();
+			addKeyListener(key);
 			long lastTime = System.nanoTime();
 			final double ns = 1000000000.0 / 60.0;
 			double delta = 0;
@@ -81,5 +78,60 @@ public class Game extends JPanel {
 			}
 		}
 	}
+
+	private class KeyHandler implements KeyListener {
+
+		public boolean w = false;
+		public boolean s = false;
+		public boolean a = false;
+		public boolean d = false;
+
+		public KeyHandler() {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			char key = e.getKeyChar();
+			if (key == 'w') {
+				w = false;
+			} else if (key == 's') {
+				s = false;
+			} else if (key == 'a') {
+				a = false;
+			} else if (key == 'd') {
+				d = false;
+			}
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {  }
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			char key = e.getKeyChar();
+			if (key == 'w') {
+				w = true;
+			} else if (key == 's') {
+				s = true;
+			} else if (key == 'a') {
+				a = true;
+			} else if (key == 'd') {
+				d = true;
+			}
+		}
+
+		public ArrayList<Boolean> getKeys() {
+
+			ArrayList<Boolean> list = new ArrayList<>();
+
+			list.add(w);
+			list.add(s);
+			list.add(d);
+			list.add(a);
+				
+			return list;
+		}
+	}
+
 } 
 
